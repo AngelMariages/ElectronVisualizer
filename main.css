@@ -1,0 +1,35 @@
+body {
+	/* font-family: 'Noto Sans JP', sans-serif; */
+	font-family: 'Open Sans', sans-serif;
+}
+
+.data-row {
+	display: flex;
+}
+
+.date-col {
+	width: 85px;
+	margin-right: 30px;
+}
+
+.data-row.header {
+	font-weight: 600;
+	margin-bottom: 8px;
+	position: sticky;
+	top: 0;
+	background-color: wheat;
+}
+
+.data-col {
+	font-size: 0;
+}
+
+.entry {
+	display: inline-block;
+	border: 1px solid black;
+	width: 40px;
+	text-align: center;
+	padding: 2px 1px;
+	font-size: 10px;
+	background-color: var(--col);
+}
