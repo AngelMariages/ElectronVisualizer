@@ -1,5 +1,5 @@
 const getData = async () => {
-	return fetch('/data.json').then(response => response.json());
+	return fetch('data.json').then(response => response.json());
 };
 
 const MAX_HUE = 120;
