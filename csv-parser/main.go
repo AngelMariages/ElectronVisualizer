@@ -57,8 +57,13 @@ func parseLines(fileName string) ([]IntakeLine, error) {
 	var lines []IntakeLine
 
 	for _, rec := range records {
+		if rec[3] == "" {
+			continue
+		}
 		intake, err := strconv.ParseFloat(strings.Replace(rec[3], ",", ".", -1), 64)
 		if err != nil {
+			fmt.Println("Line", len(lines))
+			fmt.Println("Trying to parse", rec[3], "as float")
 			fmt.Println(err)
 			continue
 		}

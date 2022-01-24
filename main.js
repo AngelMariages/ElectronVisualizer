@@ -1,11 +1,11 @@
 const getData = async () => {
-	return fetch('data.json').then(response => response.json());
+	return fetch("data.json").then((response) => response.json());
 };
 
 const MAX_HUE = 120;
-const LOWEST = [87, 187, 138] // '#57BB8A';
-const MIDDLE = [255, 214, 101] // '#FFD665';
-const HIGHEST = [230, 123, 114] // '#E67B72';
+const LOWEST = [87, 187, 138]; // '#57BB8A';
+const MIDDLE = [255, 214, 101]; // '#FFD665';
+const HIGHEST = [230, 123, 114]; // '#E67B72';
 
 const getGradientColor = (color1, color2, min, max, val) => {
 	const perc = (val - min) / (max - min);
@@ -28,48 +28,43 @@ const getColor = (val, min, max, percentileMiddle) => {
 	} else if (val === max) {
 		return rgbToCSS(HIGHEST);
 	} else if (val < percentileMiddle) {
-		return rgbToCSS(getGradientColor(LOWEST, MIDDLE, min, percentileMiddle, val));
+		return rgbToCSS(
+			getGradientColor(LOWEST, MIDDLE, min, percentileMiddle, val)
+		);
 	}
 
-	return rgbToCSS(getGradientColor(MIDDLE, HIGHEST, percentileMiddle, max, val));
+	return rgbToCSS(
+		getGradientColor(MIDDLE, HIGHEST, percentileMiddle, max, val)
+	);
 };
 
 const main = async () => {
-	const mainDiv = document.querySelector('#main');
-	const tableFragment = document.createDocumentFragment();
+	const mainDiv = document.querySelector("#main");
 
-	await getData().then(data => {
+	await getData().then((data) => {
 		const max = data.max;
 		const min = data.min;
 		const percentileMiddle = data.percentileMiddle;
 		const values = data.data;
 
+		const elements = [];
+
 		for (let d of values) {
-			const rowDiv = document.createElement('div');
-			const dateDiv = document.createElement('div');
-			const dataElDiv = document.createElement('div');
-
-			rowDiv.classList.add('data-row');
-
 			const date = new Date(d.date).toLocaleDateString();
 
-			dateDiv.innerHTML = `${date}`;
-			dateDiv.classList.add('date-col');
-
-			dataElDiv.classList.add('data-col');
-			dataElDiv.innerHTML = `${d.intake.map(v => {
-				const c = getColor(v, min, max, percentileMiddle);
-				return `<div class="entry" style="--col: ${c}">${v}</div>`;
-			}).join('')}`;
-
-			rowDiv.appendChild(dateDiv);
-			rowDiv.appendChild(dataElDiv);
-
-			tableFragment.appendChild(rowDiv);
+			elements.push(`<div class="data-row">
+				<div class="date-col">${date}</div>
+				<div class="data-col">${d.intake
+					.map((v) => {
+						const c = getColor(v, min, max, percentileMiddle);
+						return `<div class="entry" style="--col: ${c}">${v}</div>`;
+					})
+					.join("")}</div>
+			</div>`);
 		}
-	});
 
-	mainDiv.appendChild(tableFragment);
+		mainDiv.innerHTML += elements.join("");
+	});
 };
 
 window.onload = () => main();
